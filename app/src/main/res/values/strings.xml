@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">kiki</string>
+    <string name="title_activity_upload">UploadActivity</string>
+</resources>
