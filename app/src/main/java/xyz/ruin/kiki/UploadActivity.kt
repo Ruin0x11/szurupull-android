@@ -93,6 +93,7 @@ class UploadActivity : AppCompatActivity() {
 
     private fun refreshUploads() {
         uploadList.clear()
+        fab.hide()
         recyclerView.visibility = View.GONE
         emptyText.visibility = View.GONE
         loadingPanel.visibility = View.VISIBLE
@@ -137,6 +138,7 @@ class UploadActivity : AppCompatActivity() {
             recyclerView.visibility = View.VISIBLE
             emptyText.visibility = View.GONE
             uploadAdapter.setUploads(uploadList)
+            fab.show()
         } else {
             recyclerView.visibility = View.GONE
             emptyText.visibility = View.VISIBLE
