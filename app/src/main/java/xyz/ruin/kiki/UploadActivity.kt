@@ -4,7 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,11 +29,14 @@ class UploadActivity : AppCompatActivity() {
     private val uploadList = ArrayList<Upload>()
     private val uploadAdapter = UploadAdapter(uploadList)
     private lateinit var link: Link
+    private lateinit var loadingPanel: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_upload)
         setSupportActionBar(toolbar)
+
+        loadingPanel = findViewById(R.id.loadingPanel)
 
         link = handleIntent(intent)
 
@@ -74,7 +80,22 @@ class UploadActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.retryFetch -> {
+                refreshUploads()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun refreshUploads() {
+        uploadList.clear()
+        recyclerView.visibility = View.GONE
+        emptyText.visibility = View.GONE
+        loadingPanel.visibility = View.VISIBLE
         uploadsObservable = szurupullEndpoint.extract(link.url)
         subscribeObservableOfUpload()
     }
@@ -101,6 +122,7 @@ class UploadActivity : AppCompatActivity() {
             }
 
             override fun onComplete() {
+                loadingPanel.visibility = View.GONE;
                 showUploadsOnRecyclerView()
             }
 

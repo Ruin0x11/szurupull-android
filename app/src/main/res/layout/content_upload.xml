@@ -9,6 +9,26 @@
         tools:showIn="@layout/activity_upload"
         tools:context=".UploadActivity">
 
+    <RelativeLayout
+            android:id="@+id/loadingPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+        <TextView
+                android:text="No posts to display."
+                android:layout_width="126dp"
+                android:layout_height="19dp"
+                android:id="@+id/emptyText"
+                android:visibility="gone"/>
+
+        <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"/>
+
+    </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -18,9 +38,5 @@
             app:layout_constraintStart_toStartOf="parent"
             android:id="@+id/recyclerView"
             tools:listitem="@layout/item_upload"/>
-    <TextView
-            android:text="No posts to display."
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" tools:layout_editor_absoluteY="331dp"
-            tools:layout_editor_absoluteX="180dp" android:id="@+id/emptyText"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
