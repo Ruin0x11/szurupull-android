@@ -5,8 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout.VERTICAL
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_upload.view.*
@@ -37,11 +40,17 @@ class UploadAdapter(
 
     private fun setPropertiesForUploadViewHolder(uploadViewHolder: UploadViewHolder, upload: Upload) {
         checkForUrlToImage(upload, uploadViewHolder)
-        uploadViewHolder.id.text = upload?.id.toString()
+        uploadViewHolder.id.text = upload.source.toString()
+
+        val tagListAdapter = TagAdapter(upload.tags)
+        uploadViewHolder.tagList.setHasFixedSize(true)
+        uploadViewHolder.tagList.itemAnimator = DefaultItemAnimator()
+        uploadViewHolder.tagList.layoutManager = LinearLayoutManager(uploadViewHolder.tagList.context, VERTICAL, false)
+        uploadViewHolder.tagList.adapter = tagListAdapter
     }
 
     private fun checkForUrlToImage(upload: Upload, uploadViewHolder: UploadViewHolder) {
-        if (upload.fileUrl.isEmpty()) {
+        if (upload.url.isEmpty()) {
             Picasso.get()
                 .load(placeHolderImage)
                 .centerInside()
@@ -49,7 +58,7 @@ class UploadAdapter(
                 .into(uploadViewHolder.image)
         } else {
             Picasso.get()
-                .load(upload.fileUrl)
+                .load(upload.url)
                 .centerInside()
                 .fit()
                 .into(uploadViewHolder.image)
@@ -65,5 +74,6 @@ class UploadAdapter(
         val image: ImageView by lazy { view.upload_image }
         val id: TextView by lazy { view.upload_id }
         val cardView: CardView by lazy { view.card_view }
+        val tagList: RecyclerView by lazy { view.tag_list }
     }
 }

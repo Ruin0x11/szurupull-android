@@ -3,4 +3,20 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="tagGeneral">#0073FF</color>
+    <color name="tagCopyright">#A0A</color>
+    <color name="tagCharacter">#0A0</color>
+    <color name="tagArtist">#A00</color>
+    <color name="tagMeta">#F80</color>
+    <color name="tagFaults">#FF2020</color>
+    <color name="tagBatch">#440055</color>
+
+    <color name="tagGeneralDark">#51a3ec</color>
+    <color name="tagCopyrightDark">#b38bec</color>
+    <color name="tagCharacterDark">#46b265</color>
+    <color name="tagArtistDark">#f07a7b</color>
+    <color name="tagMetaDark">#e8c259</color>
+    <color name="tagFaultsDark">#FF2020</color>
+    <color name="tagBatchDark">#440055</color>
 </resources>

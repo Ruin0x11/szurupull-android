@@ -5,17 +5,47 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:id="@+id/card_view" app:cardCornerRadius="8dp"
         app:cardElevation="8dp" android:layout_margin="10dp" android:padding="8dp">
+
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="240dp" android:padding="8dp">
-        <TextView
-                android:text="TextView"
+            android:layout_height="match_parent"
+            android:padding="8dp">
+
+        <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="179dp"
-                android:layout_height="wrap_content" android:id="@+id/upload_id"/>
-        <ImageView
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/upload_id"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tag_list"
+                    tools:listitem="@layout/item_tag"
+                    tools:itemCount="15"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="231dp"
-                android:layout_height="match_parent" tools:srcCompat="@tools:sample/avatars"
-                android:id="@+id/upload_image" android:background="#00000000"/>
+                android:layout_height="match_parent"
+                android:layout_gravity="top">
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dip"
+                    tools:srcCompat="@tools:sample/avatars"
+                    android:id="@+id/upload_image"
+                    android:background="#00000000"
+                    android:layout_gravity="top"
+                    android:cropToPadding="false"
+                    android:adjustViewBounds="true"/>
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

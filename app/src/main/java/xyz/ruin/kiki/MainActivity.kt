@@ -3,7 +3,6 @@ package xyz.ruin.kiki
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import xyz.ruin.kiki.UploadActivity.Companion.EXTRA_MESSAGE
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,7 +15,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun startUpload() {
         val intent = Intent(this, UploadActivity::class.java).apply {
-            putExtra(EXTRA_MESSAGE, "asd")
         }
         startActivity(intent)
     }

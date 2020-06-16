@@ -1,5 +1,6 @@
 package xyz.ruin.kiki
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -7,9 +8,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -17,28 +15,26 @@ import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_upload.*
 import kotlinx.android.synthetic.main.content_upload.*
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
+import xyz.ruin.kiki.model.Link
 import xyz.ruin.kiki.model.Upload
 
 
 class UploadActivity : AppCompatActivity() {
     private val compositeDisposable = CompositeDisposable()
-    private val kikiEndpoint = generateRetrofitBuilder().create(KikiEndpoint::class.java)
+    private val szurupullEndpoint = Util.generateRetrofitBuilder().create(SzurupullEndpoint::class.java)
     private var uploadsObservable: Observable<List<Upload>>? = null
     private val uploadList = ArrayList<Upload>()
     private val uploadAdapter = UploadAdapter(uploadList)
+    private lateinit var link: Link
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_upload)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+        link = handleIntent(intent)
+
+        fab.setOnClickListener { _ -> sendLink(link) }
 
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -48,29 +44,43 @@ class UploadActivity : AppCompatActivity() {
         refreshUploads()
     }
 
-    private fun generateRetrofitBuilder(): Retrofit {
-        val gson = GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create()
-        return Retrofit.Builder()
-            .baseUrl(Config.ENDPOINT_URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+    private fun handleIntent(intent: Intent): Link =
+        when (intent.action) {
+            Intent.ACTION_SEND -> {
+                if ("text/plain" == intent.type) {
+                    handleTextUrl(intent) // Handle text being sent
+                } else {
+                    Link("")
+                }
+            }
+            else -> Link("")
+        }
+
+    private fun handleTextUrl(intent: Intent): Link {
+        val url = intent.getStringExtra(Intent.EXTRA_TEXT)
+        return Link(url!!)
     }
-    
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean { // Inflate the menu; this adds items to the action bar if it is present.
+
+    private fun sendLink(link: Link) {
+        val networkIntent = Intent(this, UploadService::class.java)
+        networkIntent.putExtra("action", UploadService.INTENT_POST)
+        networkIntent.putExtra("link", link)
+        startService(networkIntent)
+        finish()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_upload, menu)
         return true
     }
 
     private fun refreshUploads() {
-        uploadsObservable = kikiEndpoint.getPosts("hibike!_euphonium", 10)
-        subscribeObservableOfPost()
+        uploadsObservable = szurupullEndpoint.extract(link.url)
+        subscribeObservableOfUpload()
     }
 
 
-    private fun subscribeObservableOfPost() {
+    private fun subscribeObservableOfUpload() {
         uploadList.clear()
         compositeDisposable.add(
             uploadsObservable!!.subscribeOn(Schedulers.io())
@@ -95,7 +105,7 @@ class UploadActivity : AppCompatActivity() {
             }
 
             override fun onError(e: Throwable) {
-                Log.e("createUploadObserver", "Upload error: ${e.message}")
+                Log.e("createUploadObserver", "Upload error: $e")
             }
         }
     }
@@ -114,9 +124,5 @@ class UploadActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
-    }
-
-    companion object {
-        const val EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE"
     }
 }

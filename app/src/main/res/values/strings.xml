@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">kiki</string>
-    <string name="title_activity_upload">UploadActivity</string>
+    <string name="app_name">szurupull</string>
+    <string name="title_activity_upload">szurupull</string>
+    <string name="title_activity_upload_auto">szurupull (auto)</string>
+    <string name="add_success">Upload successful.</string>
+    <string name="notification_channel_error_name">Upload error</string>
+    <string name="notification_channel_error_description">Channel dedicated to uploading errors</string>
 </resources>

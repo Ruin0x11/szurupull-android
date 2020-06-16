@@ -1,5 +1,7 @@
 package xyz.ruin.kiki
 
 object Config {
-    var ENDPOINT_URL = "https://danbooru.donmai.us/"
+    var SZURUPULL_HOST = ""
+    var SZURUPULL_USERNAME = ""
+    var SZURUPULL_PASSWORD = ""
 }
