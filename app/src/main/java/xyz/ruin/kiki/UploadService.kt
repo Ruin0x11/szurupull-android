@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import xyz.ruin.kiki.model.Link
 import xyz.ruin.kiki.model.Upload
 
-class UploadService : IntentService("NetworkService") {
+class UploadService : IntentService("UploadService") {
     private var mContext: Context = this
     private var mToastHandler = Handler(Looper.getMainLooper())
     private val szurupullEndpoint = Util.generateRetrofitBuilder().create(SzurupullEndpoint::class.java)

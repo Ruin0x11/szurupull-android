@@ -33,14 +33,11 @@ class UploadAdapter(
     override fun onBindViewHolder(uploadViewHolder: UploadViewHolder, itemIndex: Int) {
         val upload: Upload = uploadList[itemIndex]
         setPropertiesForUploadViewHolder(uploadViewHolder, upload)
-        uploadViewHolder.cardView.setOnClickListener {
-            //do something
-        }
     }
 
     private fun setPropertiesForUploadViewHolder(uploadViewHolder: UploadViewHolder, upload: Upload) {
         checkForUrlToImage(upload, uploadViewHolder)
-        uploadViewHolder.id.text = upload.source.toString()
+        uploadViewHolder.id.text = upload.source
 
         val tagListAdapter = TagAdapter(upload.tags)
         uploadViewHolder.tagList.setHasFixedSize(true)
@@ -50,19 +47,11 @@ class UploadAdapter(
     }
 
     private fun checkForUrlToImage(upload: Upload, uploadViewHolder: UploadViewHolder) {
-        if (upload.url.isEmpty()) {
-            Picasso.get()
-                .load(placeHolderImage)
-                .centerInside()
-                .fit()
-                .into(uploadViewHolder.image)
-        } else {
-            Picasso.get()
-                .load(upload.url)
-                .centerInside()
-                .fit()
-                .into(uploadViewHolder.image)
-        }
+        Picasso.get()
+            .load(upload.url)
+            .centerInside()
+            .fit()
+            .into(uploadViewHolder.image)
     }
 
     fun setUploads(uploads: ArrayList<Upload>) {
@@ -73,7 +62,6 @@ class UploadAdapter(
     inner class UploadViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val image: ImageView by lazy { view.upload_image }
         val id: TextView by lazy { view.upload_id }
-        val cardView: CardView by lazy { view.card_view }
         val tagList: RecyclerView by lazy { view.tag_list }
     }
 }
